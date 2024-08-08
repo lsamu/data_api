@@ -1,0 +1,45 @@
+{
+  "name": "sass-api",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode dev",
+    "dev:v5soft": "vite --mode v5soft",
+    "dev:jlit8": "vite --mode jlit8",
+    "serve": "vite",
+    "build": "vite build",
+    "build:v5soft": "vite build --mode v5soft",
+    "build:sass": "vite build --mode jlit8",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/components": "^10.8.0",
+    "@vueuse/core": "^10.8.0",
+    "axios": "^1.6.7",
+    "element-plus": "^2.6.1",
+    "html2canvas": "^1.4.1",
+    "monaco-editor": "^0.46.0",
+    "node-uuid": "^1.4.8",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
+    "sass": "^1.71.1",
+    "sass-loader": "^14.1.1",
+    "splitpanes": "^3.1.5",
+    "uuid": "^9.0.1",
+    "vue": "^3.4.15",
+    "vue-router": "4.3.0",
+    "vue3-sfc-loader": "^0.9.5",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/compiler-sfc": "^3.4.19",
+    "typescript": "^5.3.3",
+    "terser": "^5.27.2",
+    "unplugin-auto-import": "^0.17.5",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite": "^5.1.4",
+    "vue-tsc": "^1.8.27"
+  }
+}

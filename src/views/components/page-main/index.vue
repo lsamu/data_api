@@ -1,0 +1,120 @@
+<template>
+    <div>
+        <el-row>
+            <el-col>
+                <div style="display: flex;flex-direction: row;">
+                    <el-input placeholder="请输入页面路径" v-model="thatOption.form.key" style="flex: 1;">
+                    </el-input>
+                    <el-button  type="primary" style="margin-left: 10px" icon="el-icon-CaretRight" title="预览 ctrl+r "
+                        @click="handleRun">
+                    </el-button>
+                    <el-button  type="primary" style="margin-left: 6px" icon="el-icon-check" title="保存 ctrl+s "
+                        @click="handleSave">
+                    </el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col>
+                <el-tabs v-model="thatOption.active">
+                    <el-tab-pane name="script" label="脚本内容">
+                        <box-magic-monaco-editor v-model="thatOption.form.script" 
+                            :style="{ height: useThat.sizeOption.global.height - useThat.sizeOption.footer.height - 245 + 'px' }" language="html">
+
+                        </box-magic-monaco-editor>
+                    </el-tab-pane>
+                    <el-tab-pane name="params" label="请求参数">
+                        <box-magic-params v-model="thatOption.form.params" 
+                            :style="{ height: useThat.sizeOption.global.height - useThat.sizeOption.footer.height - 245 + 'px' }"></box-magic-params>
+                    </el-tab-pane>
+                    <el-tab-pane name="desc" label="页面描述">
+                        <box-magic-monaco-editor v-model="thatOption.form.desc" 
+                            :style="{ height: useThat.sizeOption.global.height - useThat.sizeOption.footer.height - 245 + 'px' }" language="plaintext"></box-magic-monaco-editor>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-col>
+        </el-row>
+
+        <el-drawer v-model="drawerOption.drawer.visible" :title="drawerOption.drawer.title" append-to-body size="100%">
+            <box-magic-vue-loader v-model="drawerOption.value"></box-magic-vue-loader>
+        </el-drawer>
+
+    </div>
+</template>
+<script lang="ts" setup>
+import { thatStore } from "../../store/thatStore"
+import requestUtil from "../../utils/requestUtil";
+import { ElMessageBox as MessageBox, ElAlert as Alert, ElNotification as Notification, ElMessage as Message } from "element-plus";
+import lodash from "lodash"
+
+const useThat = thatStore();
+
+const props = defineProps(["modelValue"])
+
+const keys = useMagicKeys({
+    passive: false,
+    onEventFired(e) {
+        e.preventDefault()
+        return false
+    }
+})
+
+const ctrls = keys['ctrl+s']
+
+watch(ctrls, (v) => {
+    if (v) {
+        if (useThat.thatOption.dataSelected.id == props.modelValue.id) {
+            console.log('触发了保存')
+            handleSave()
+        }
+    }
+})
+
+const ctrlr = keys['ctrl+r']
+
+watch(ctrlr, (v) => {
+    if (v) {
+        if (useThat.thatOption.dataSelected.id == props.modelValue.id) {
+            console.log('触发了运行')
+            handleRun()
+        }
+    }
+})
+
+const thatOption = reactive({
+    active: "script",
+    form: lodash.merge(props.modelValue, {
+        params: [],
+        desc: ""
+    }) as any
+})
+
+const handleSave = async () => {
+    const ret = await requestUtil.request("/admin/magic/magic/update", "post", thatOption.form)
+    if (ret.code != 0) {
+        Message.error(ret.msg);
+        return
+    }
+    Notification.success("保存成功");
+}
+
+const handleRun = async () => {
+    const ret = await requestUtil.request("/admin/magic/magic/update", "post", thatOption.form)
+    if (ret.code != 0) {
+        Message.error(ret.msg);
+        return
+    }
+
+    drawerOption.drawer.visible = true
+    drawerOption.value = thatOption.form.script
+
+}
+
+const drawerOption = reactive({
+    drawer: {
+        visible: false,
+        title: "组件预览"
+    },
+    value: ""
+})
+</script>
